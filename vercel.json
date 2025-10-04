@@ -1,18 +1,18 @@
 {
-  "version": 2,
+  "version": 3,
   "builds": [
     {
       "src": "package.json",
       "use": "@vercel/static-build",
       "config": {
-        "distDir": "dist"
+        "outputDirectory": "02_Project/dist"
       }
     }
   ],
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "/dist/$1"
+      "dest": "/02_Project/dist/$1"
     }
   ]
 }
