@@ -1,0 +1,22 @@
+{
+  "name": "04-react",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "npm install --prefix FoodBackend && npm install --prefix 02_Project && npm run build --prefix 02_Project",
+    "start": "npm run start --prefix FoodBackend"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FavGodson87/Inyomee-app.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/FavGodson87/Inyomee-app/issues"
+  },
+  "homepage": "https://github.com/FavGodson87/Inyomee-app#readme"
+}

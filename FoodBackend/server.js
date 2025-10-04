@@ -25,7 +25,7 @@ const __dirname = path.dirname(__filename);
 app.use(
   cors({
     origin: (origin, callback) => {
-      const allowedOrigins = ["http://localhost:5173", "http://localhost:5174"];
+      const allowedOrigins = ["http://localhost:5173", "http://localhost:5174", "http://localhost:4000"];
       if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
@@ -79,15 +79,37 @@ createInitialAdmin();
 
 // ROUTES
 app.use("/api/user", userRouter);
-app.use("/api/settings", router),
-  app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+app.use("/api/settings", router);
 app.use("/api/items", itemRouter);
 app.use("/api/cart", cartRouter);
 app.use("/api/orders", orderRouter);
 app.use("/api/favorites", favoritesRouter);
 
+
+// UPLOADS
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
 // ADMIN ROUTES
 app.use("/api/admin", adminRouter);
+
+app.use((req, res, next) => {
+  if (req.path.match(/\.(css|js)$/)) {
+    console.log('Asset request:', req.path);
+  }
+  next();
+});
+
+if (process.env.NODE_ENV === "production") {
+  const distPath = path.join(__dirname, "../02_Project/dist");
+  
+  // Serve static files
+  app.use(express.static(distPath));
+  
+  // Only for non-API routes that don't have file extensions
+  app.get(/^\/(?!api)[^.]*$/, (req, res) => {
+    res.sendFile(path.join(distPath, "index.html"));
+  });
+}
 
 app.get("/", (req, res) => {
   res.send("API WORKING");
