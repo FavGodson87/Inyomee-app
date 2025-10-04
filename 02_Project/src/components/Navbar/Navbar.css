@@ -1,0 +1,15 @@
+.active {
+  position: relative;
+  color: #c71919; /* highlight active text */
+}
+
+.active::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -4px; /* adjust underline distance */
+  width: 100%;
+  height: 2px;
+  background-color: #c71919;
+  border-radius: 2px;
+}

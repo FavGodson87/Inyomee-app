@@ -1,0 +1,15 @@
+@import "tailwindcss";
+
+
+body {
+  font-family: 'League Spartan', sans-serif;
+} 
+
+/* index.css */
+html, body {
+  width: 100%;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}
+
+

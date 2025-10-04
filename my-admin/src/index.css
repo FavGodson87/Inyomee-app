@@ -1,0 +1,23 @@
+@import "tailwindcss";
+
+@theme {
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+
+  --breakpoint-mid: 659px;
+}
+
+
+body {
+  @apply bg-green-100;
+  font-family: 'League Spartan', sans-serif;
+} 
+
+@media (min-width: 1027px) and (max-width: 1295px) {
+  .custom-space {
+    margin: 20px !important; /* same as m-6 */
+  }
+}
+

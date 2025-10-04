@@ -1,0 +1,84 @@
+.text-glow {
+  text-shadow:
+    0 0 8px rgba(255, 255, 255, 0.9),
+    0 0 16px rgba(255, 255, 255, 0.8);
+}
+
+
+.fade-in-up {
+  opacity: 0;
+  transform: translateY(40px); 
+  transition: opacity 1.5s ease-out, transform 1.5s ease-out;
+}
+
+.fade-in-up.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+
+/* fade → simple fade in
+
+fade-up → fade in from bottom
+
+fade-down → fade in from top
+
+fade-left → fade in from left
+
+fade-right → fade in from right
+
+fade-up-right → diagonal (up + right)
+
+fade-up-left → diagonal (up + left)
+
+fade-down-right → diagonal (down + right)
+
+fade-down-left → diagonal (down + left) */
+
+
+
+/* zoom-in
+
+zoom-in-up
+
+zoom-in-down
+
+zoom-in-left
+
+zoom-in-right
+
+zoom-out (and all directions too 👆) */
+
+
+
+/* flip-left
+
+flip-right
+
+flip-up
+
+flip-down
+
+slide-up
+
+slide-down
+
+slide-left
+
+slide-right */
+
+
+/* data-aos-delay="200" → delay start by 200ms
+
+data-aos-duration="1000" → run animation for 1s
+
+data-aos-easing="ease-in-out" → custom easing */
+
+
+/* <img 
+  src="/waffle.png" 
+  alt="Waffle"
+  data-aos="zoom-in-up"
+  data-aos-delay="200"
+  data-aos-duration="1200"
+/> */
