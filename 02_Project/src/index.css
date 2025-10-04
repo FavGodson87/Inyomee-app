@@ -1,6 +1,5 @@
 @import "tailwindcss";
 
-
 body {
   font-family: 'League Spartan', sans-serif;
 } 
@@ -9,7 +8,18 @@ body {
 html, body {
   width: 100%;
   overflow-x: hidden;
+
   scroll-behavior: smooth;
 }
 
-
+/* Force light theme for Chrome mobile dark mode */ 
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: light !important;
+  }
+  
+  html, body {
+    background-color: white !important;
+    color: #2e2e2e !important;
+  }
+}
