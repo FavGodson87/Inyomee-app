@@ -1,12 +1,9 @@
 {
-  "version": 3,
+  "version": 2,
   "builds": [
     {
-      "src": "package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "outputDirectory": "02_Project/dist"
-      }
+      "src": "02_Project/package.json",
+      "use": "@vercel/static-build"
     }
   ],
   "routes": [
