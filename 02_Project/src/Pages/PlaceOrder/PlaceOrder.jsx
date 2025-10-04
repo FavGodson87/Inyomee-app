@@ -13,7 +13,8 @@ const PlaceOrder = () => {
     foodList,
     loadCartData,
     token,
-    userData
+    userData,
+    url
   } = useContext(StoreContext);
   
   const subtotal = getTotalCartAmount();
@@ -108,7 +109,7 @@ const PlaceOrder = () => {
       };
 
       const res = await axios.post(
-        "http://localhost:4000/api/orders",
+        `${url}/api/orders`,
         orderData,
         { 
           headers: { Authorization: `Bearer ${token}` },
