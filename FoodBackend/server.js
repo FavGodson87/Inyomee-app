@@ -3,118 +3,123 @@ import cors from "cors";
 import "dotenv/config";
 import { connectDB } from "./config/db.js";
 import cookieParser from "cookie-parser";
-
 import path from "path";
 import { fileURLToPath } from "url";
 
-import userRouter from "./routes/userRoute.js";
-import itemRouter from "./routes/itemsRoute.js";
-import cartRouter from "./routes/cartRoute.js";
-import orderRouter from "./routes/orderRoute.js";
-import favoritesRouter from "./routes/favoritesRoute.js";
-import router from "./routes/settingsRoute.js";
-import adminRouter from "./routes/adminRouter.js";
-
+// Your other imports...
 const app = express();
 const port = process.env.PORT || 4000;
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// MIDDLEWARE
+// Enhanced CORS configuration
 app.use(
   cors({
-    origin: (origin, callback) => {
-      const allowedOrigins = ["http://localhost:5173", "http://localhost:5174", "http://localhost:4000", "https://inyomee-app.onrender.com"];
-      if (!origin || allowedOrigins.includes(origin)) {
+    origin: function (origin, callback) {
+      // Allow requests with no origin (like same-origin requests)
+      if (!origin) return callback(null, true);
+      
+      const allowedOrigins = [
+        "http://localhost:5173", 
+        "http://localhost:5174", 
+        "http://localhost:4000", 
+        "https://inyomee-app.onrender.com"
+      ];
+      
+      if (allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
+        console.log('CORS blocked for origin:', origin);
         callback(new Error("Not allowed by CORS"));
       }
     },
     credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'Cookie']
   })
 );
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+
+// Body parsing middleware
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use(cookieParser());
 
-// DATABASE
+// Connect to MongoDB (from your db.js)
 connectDB();
 
-// INITIAL ADMIN
-const createInitialAdmin = async () => {
-  try {
-    const Admin = (await import("./models/adminModal.js")).default;
-    const adminExists = await Admin.findOne({ email: "admin@inyomee.com" });
-
-    if (!adminExists) {
-      const admin = new Admin({
-        username: "superadmin",
-        name: "Super Admin",
-        email: "admin@inyomee.com",
-        password: "admin123456",
-        role: "super_admin",
-        permissions: {
-          manageUsers: true,
-          manageProducts: true,
-          manageOrders: true,
-          manageSettings: true,
-        },
-      });
-
-      await admin.save();
-      console.log("INITIAL ADMIN CREATED SUCCESSFULLY!");
-      console.log("Email: admin@inyomee.com");
-      console.log("Password: admin123456");
-    } else {
-      console.log("Admin user already exists");
-    }
-  } catch (error) {
-    console.log("Admin creation note:", error.message);
-  }
-};
-
-createInitialAdmin();
-
-// ROUTES
+// Your routes
 app.use("/api/user", userRouter);
 app.use("/api/settings", router);
 app.use("/api/items", itemRouter);
 app.use("/api/cart", cartRouter);
 app.use("/api/orders", orderRouter);
 app.use("/api/favorites", favoritesRouter);
-
-
-// UPLOADS
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
-
-// ADMIN ROUTES
 app.use("/api/admin", adminRouter);
 
-app.use((req, res, next) => {
-  if (req.path.match(/\.(css|js)$/)) {
-    console.log('Asset request:', req.path);
-  }
-  next();
+// Static files
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
+// Health check route
+app.get("/api/health", (req, res) => {
+  res.status(200).json({ 
+    status: "OK", 
+    message: "Server is running",
+    timestamp: new Date().toISOString(),
+    environment: process.env.NODE_ENV || "development"
+  });
 });
 
+// Production static file serving
 if (process.env.NODE_ENV === "production") {
   const distPath = path.join(__dirname, "../02_Project/dist");
+  
+  console.log('Serving static files from:', distPath);
   
   // Serve static files
   app.use(express.static(distPath));
   
-  // Only for non-API routes that don't have file extensions
-   app.get(/^\/(?!api).*/, (req, res) => {
-    res.sendFile(path.join(distPath, "index.html"));
+  // Handle client-side routing
+  app.get("*", (req, res, next) => {
+    // Skip API routes
+    if (req.path.startsWith("/api/")) {
+      return next();
+    }
+    
+    // Serve React app for all other routes
+    res.sendFile(path.join(distPath, "index.html"), (err) => {
+      if (err) {
+        console.error("Error serving React app:", err);
+        next(err);
+      }
+    });
   });
 }
 
+// Root route
 app.get("/", (req, res) => {
-  res.send("API WORKING");
+  res.json({ 
+    message: "API WORKING", 
+    environment: process.env.NODE_ENV,
+    timestamp: new Date().toISOString()
+  });
+});
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error('Server Error:', err);
+  res.status(500).json({ 
+    error: 'Internal Server Error',
+    message: err.message 
+  });
+});
+
+// 404 handler for API routes
+app.use("/api/*", (req, res) => {
+  res.status(404).json({ error: "API endpoint not found" });
 });
 
 app.listen(port, () => {
   console.log(`Server Started at http://localhost:${port}`);
+  console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
 });
