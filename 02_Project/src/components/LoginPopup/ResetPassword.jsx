@@ -14,7 +14,7 @@ const ResetPassword = () => {
   const [loading, setLoading] = useState(false);
 
   const token = searchParams.get('token');
-  const backendUrl = "http://localhost:4000"; 
+  const backendUrl = window.location.hostname === 'localhost' ? "http://localhost:4000" : "";
 
   const handleSubmit = async (e) => {
     e.preventDefault();
