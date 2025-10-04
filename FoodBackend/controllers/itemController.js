@@ -32,7 +32,7 @@ export const getItems = async (_req, res, next) => {
   try {
     const items = await itemModal.find().sort({ createdAt: -1 });
 
-    const protocol = _req.protocol;   // 'http' or 'https'
+    const protocol = _req.get('x-forwarded-proto') || _req.protocol;   // 'http' or 'https'
     const host = _req.get("host");    // e.g., 'localhost:4000'
     const fullHost = `${protocol}://${host}`;
 
