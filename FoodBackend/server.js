@@ -106,8 +106,7 @@ if (process.env.NODE_ENV === "production") {
   app.use(express.static(distPath));
   
   // Only for non-API routes that don't have file extensions
-   app.get("/*", (req, res, next) => {
-    if (req.path.startsWith("/api")) return next();
+   app.get(/^\/(?!api).*/, (req, res) => {
     res.sendFile(path.join(distPath, "index.html"));
   });
 }
