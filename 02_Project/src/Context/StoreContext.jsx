@@ -15,7 +15,9 @@ const StoreContextProvider = (props) => {
   const [rewardProgress, setRewardProgress] = useState(0);
   const [userData, setUserData] = useState(null);
 
-  const url = "http://localhost:4000";
+  // const url = "http://localhost:4000";
+
+  const url = window.location.hostname === 'localhost' ? "http://localhost:4000" : "";
 
   // --- Logout ---
   const handleLogout = () => {
