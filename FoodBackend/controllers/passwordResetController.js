@@ -1,5 +1,5 @@
 import userModel from "../models/userModal.js";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import crypto from "crypto";
 import nodemailer from "nodemailer";
 

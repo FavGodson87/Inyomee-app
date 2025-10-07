@@ -1,6 +1,6 @@
 import User from "../models/userModal.js";
 import UserSettings from "../models/userSettingsModal.js";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 
 // Get user profile and settings
 export const getUserSettings = async (req, res) => {
