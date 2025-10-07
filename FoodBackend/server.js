@@ -100,27 +100,15 @@ app.use((req, res, next) => {
 });
 
 if (process.env.NODE_ENV === "production") {
-  const fs = require('fs');
   const distPath = path.join(__dirname, "dist");
   
-  console.log('=== DEBUGGING DIST FOLDER ===');
-  console.log('Current directory:', __dirname);
-  console.log('Dist path:', distPath);
-  console.log('Dist exists:', fs.existsSync(distPath));
+  // Serve static files
+  app.use(express.static(distPath));
   
-  if (fs.existsSync(distPath)) {
-    console.log('Dist folder contents:', fs.readdirSync(distPath));
-    // Serve static files
-    app.use(express.static(distPath));
-    
-    // Only for non-API routes that don't have file extensions
-    app.get(/^\/(?!api).*/, (req, res) => {
-      res.sendFile(path.join(distPath, "index.html"));
-    });
-    console.log('✅ Static file serving enabled!');
-  } else {
-    console.log('❌ Dist folder not found!');
-  }
+  // Only for non-API routes that don't have file extensions
+   app.get(/^\/(?!api).*/, (req, res) => {
+    res.sendFile(path.join(distPath, "index.html"));
+  });
 }
 
 app.get("/", (req, res) => {
