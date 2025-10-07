@@ -19,7 +19,22 @@ const loginUser = async (req, res) => {
     }
 
     const token = createToken(user);
-    res.json({ success: true, token, userId: user._id, email: user.email, name: user.name, username: user.username, rewardProgress: user.rewardProgress  });
+
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: true, // ← Crucial for iPhone
+      sameSite: "none", // ← Crucial for iPhone
+      maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
+    });
+    res.json({
+      success: true,
+      token,
+      userId: user._id,
+      email: user.email,
+      name: user.name,
+      username: user.username,
+      rewardProgress: user.rewardProgress,
+    });
   } catch (error) {
     console.log(error);
     res.json({ success: false, message: "Error" });
@@ -78,35 +93,49 @@ const registerUser = async (req, res) => {
 
     // CREATE TOKEN
     const token = createToken(user);
-    res.json({ success: true, token, userId: user._id, email: user.email, name: user.name, username: user.username, rewardProgress: user.rewardProgress });
+
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: true, // ← Crucial for iPhone
+      sameSite: "none", // ← Crucial for iPhone
+      maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
+    });
+    res.json({
+      success: true,
+      token,
+      userId: user._id,
+      email: user.email,
+      name: user.name,
+      username: user.username,
+      rewardProgress: user.rewardProgress,
+    });
   } catch (error) {
     console.log(error);
     res.json({ success: false, message: "Error" });
   }
 };
 
-
-
 const validateToken = async (req, res) => {
   try {
     // If middleware passed, token is valid
-    res.json({ 
-      success: true, 
-      user: { 
-        _id: req.user.id, 
-        email: req.user.email 
-      } 
+    res.json({
+      success: true,
+      user: {
+        _id: req.user.id,
+        email: req.user.email,
+      },
     });
   } catch (error) {
     res.status(401).json({ success: false, message: "Invalid token" });
   }
 };
 
-
 // GET REWARDS (for logged-in users)
 const getRewards = async (req, res) => {
   try {
-    const user = await userModel.findById(req.user._id).select("rewardProgress");
+    const user = await userModel
+      .findById(req.user._id)
+      .select("rewardProgress");
     if (!user) return res.status(404).json({ message: "User not found" });
 
     res.json({ rewardProgress: user.rewardProgress });
@@ -116,5 +145,4 @@ const getRewards = async (req, res) => {
   }
 };
 
-
-export { loginUser, registerUser, getRewards, validateToken};
+export { loginUser, registerUser, getRewards, validateToken };
