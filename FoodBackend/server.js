@@ -105,7 +105,7 @@ app.use((req, res, next) => {
 
 // PRODUCTION static file serving - FIXED
 if (process.env.NODE_ENV === "production") {
-  const distPath = path.join(__dirname, "dist");
+  const distPath = path.join(__dirname, "../02_Project/dist");
   console.log("Serving static files from:", distPath);
 
   // Serve static files from dist directory
