@@ -1,23 +1,22 @@
 {
   "name": "foodbackend",
   "version": "1.0.0",
-  "description": "",
+  "description": "Backend for food delivery application",
   "license": "ISC",
   "author": "",
   "type": "module",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "nodemon server.js"
+    "dev": "nodemon server.js",
+    "build:frontend": "cd ../frontend-directory && npm run build",
+    "install:frontend": "cd ../frontend-directory && npm install"
   },
   "dependencies": {
     "04-react": "file:..",
-    "bcrypt": "^6.0.0",
     "bcryptjs": "^3.0.2",
-    "body-parser": "^2.2.0",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
-    "crypto": "^1.0.1",
     "dotenv": "^17.2.2",
     "express": "^5.1.0",
     "express-async-handler": "^1.2.0",
@@ -25,8 +24,13 @@
     "mongoose": "^8.18.1",
     "multer": "^2.0.2",
     "nodemailer": "^7.0.6",
-    "nodemon": "^3.1.10",
     "stripe": "^18.5.0",
     "validator": "^13.15.15"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   }
 }

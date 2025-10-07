@@ -25,7 +25,13 @@ const __dirname = path.dirname(__filename);
 app.use(
   cors({
     origin: (origin, callback) => {
-      const allowedOrigins = ["http://localhost:5173", "http://localhost:5174", "http://localhost:4000", "https://inyomee-app.onrender.com", "https://inyomee-app-production.up.railway.app"];
+      const allowedOrigins = [
+        "http://localhost:5173", 
+        "http://localhost:5174", 
+        "http://localhost:4000", 
+        "https://inyomee-app.onrender.com", 
+        "https://inyomee-app-production.up.railway.app"
+      ];
       if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
@@ -84,37 +90,60 @@ app.use("/api/items", itemRouter);
 app.use("/api/cart", cartRouter);
 app.use("/api/orders", orderRouter);
 app.use("/api/favorites", favoritesRouter);
+app.use("/api/admin", adminRouter); // Moved this up with other API routes
 
-
-// UPLOADS
+// UPLOADS - Serve static files
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
-// ADMIN ROUTES
-app.use("/api/admin", adminRouter);
-
+// Debug middleware for asset requests
 app.use((req, res, next) => {
-  if (req.path.match(/\.(css|js)$/)) {
-    console.log('Asset request:', req.path);
+  if (req.path.match(/\.(css|js|png|jpg|jpeg|gif|ico|svg)$/)) {
+    console.log('Asset request:', req.method, req.path);
   }
   next();
 });
 
+// PRODUCTION static file serving - FIXED
 if (process.env.NODE_ENV === "production") {
   const distPath = path.join(__dirname, "dist");
+  console.log('Serving static files from:', distPath);
   
-  // Serve static files
-  app.use(express.static(distPath));
+  // Serve static files from dist directory
+  app.use(express.static(distPath, {
+    index: false, // Don't serve index.html for directories
+    fallthrough: true // Continue to next middleware if file not found
+  }));
   
-  // Only for non-API routes that don't have file extensions
-   app.get(/^\/(?!api).*/, (req, res) => {
+  // Handle SPA routing - serve index.html for all non-API routes
+  app.get(/^\/(?!api).*/, (req, res) => {
+    console.log('SPA route requested:', req.path);
     res.sendFile(path.join(distPath, "index.html"));
   });
 }
 
+// Root route
 app.get("/", (req, res) => {
   res.send("API WORKING");
 });
 
+// 404 handler for API routes
+app.use("/api/*", (req, res) => {
+  res.status(404).json({ 
+    error: "API endpoint not found",
+    path: req.originalUrl 
+  });
+});
+
+// Global error handler
+app.use((error, req, res, next) => {
+  console.error('Server Error:', error);
+  res.status(500).json({ 
+    error: 'Internal server error',
+    message: process.env.NODE_ENV === 'development' ? error.message : 'Something went wrong'
+  });
+});
+
 app.listen(port, () => {
   console.log(`Server Started at http://localhost:${port}`);
+  console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
 });
