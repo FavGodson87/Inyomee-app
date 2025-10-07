@@ -25,7 +25,7 @@ const __dirname = path.dirname(__filename);
 app.use(
   cors({
     origin: (origin, callback) => {
-      const allowedOrigins = ["http://localhost:5173", "http://localhost:5174", "http://localhost:4000", "https://inyomee-app.onrender.com"];
+      const allowedOrigins = ["http://localhost:5173", "http://localhost:5174", "http://localhost:4000", "https://inyomee-app.onrender.com", "https://inyomee-app-production.up.railway.app"];
       if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
@@ -100,7 +100,7 @@ app.use((req, res, next) => {
 });
 
 if (process.env.NODE_ENV === "production") {
-  const distPath = path.join(__dirname, "../02_Project/dist");
+  const distPath = path.join(__dirname, "dist");
   
   // Serve static files
   app.use(express.static(distPath));
