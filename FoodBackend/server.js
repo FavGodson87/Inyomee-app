@@ -117,7 +117,7 @@ if (process.env.NODE_ENV === "production") {
   );
 
   // Handle SPA routing - serve index.html for all non-API routes
-  app.get(/^\/(?!api).*/, (req, res) => {
+  app.get(/\/(?!api).*/, (req, res) => {
     console.log("SPA route requested:", req.path);
     res.sendFile(path.join(distPath, "index.html"));
   });
