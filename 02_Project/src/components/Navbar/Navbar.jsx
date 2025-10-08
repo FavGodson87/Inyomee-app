@@ -9,7 +9,7 @@ import {
   CiHeart,
   CiHome,
   CiBowlNoodles,
-  CiPassport1,
+  CiMobile2,
   CiViewBoard,
   CiLogout,
 } from "react-icons/ci";
@@ -639,7 +639,7 @@ const Navbar = ({ setShowLogin }) => {
             menu === "mobile-app" ? "text-green-500" : "text-[#2e2e2e]"
           }`}
         >
-          <CiPassport1 className="w-6 h-6" />
+          <CiMobile2 className="w-6 h-6" />
         </button>
         <Link
           to="/cart"
