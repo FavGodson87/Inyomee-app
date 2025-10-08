@@ -3,13 +3,20 @@
   "builds": [
     {
       "src": "02_Project/package.json",
-      "use": "@vercel/static-build"
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "dist"
+      }
     }
   ],
   "routes": [
     {
+      "src": "/assets/(.*)",
+      "dest": "/02_Project/dist/assets/$1"
+    },
+    {
       "src": "/(.*)",
-      "dest": "/02_Project/dist/$1"
+      "dest": "/02_Project/dist/index.html"
     }
   ]
 }
