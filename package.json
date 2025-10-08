@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "npm install --prefix FoodBackend && cd 02_Project && npm install && npm run build",
+    "build": "npm install --prefix FoodBackend && cd 02_Project && NODE_ENV=development npm install && npm run build",
     "start": "npm run start --prefix FoodBackend"
   },
   "repository": {
