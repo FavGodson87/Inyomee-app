@@ -18,5 +18,5 @@ export default defineConfig({
     outDir: 'dist',
     emptyOutDir: true
   },
-  base: process.env.VITE_BASE_PATH || "/Inyomee-app"
+  base: process.env.VITE_BASE_PATH || "./"
 })
